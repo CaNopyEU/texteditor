@@ -16,7 +16,18 @@ export function Editor() {
         e.preventDefault()
 
         const text = e.clipboardData.getData('text/plain')
-        setContent((content) => content + text)
+        const selection = window.getSelection()
+        if (!selection?.rangeCount) return
+
+        const range = selection.getRangeAt(0)
+
+        setContent((content) => {
+            return (
+                content.slice(0, range.startOffset) +
+                text +
+                content.slice(range.endOffset, content.length)
+            )
+        })
     }
 
     return (
